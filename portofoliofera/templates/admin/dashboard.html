@@ -1,0 +1,73 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <p>Selamat datang kembali! Kelola konten portfolio kamu di sini.</p>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="num">{{ stats.skills }}</div>
+    <div class="label">💡 Total Skills</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">{{ stats.experiences }}</div>
+    <div class="label">📋 Experiences</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">{{ stats.projects }}</div>
+    <div class="label">🗂️ Projects</div>
+  </div>
+  <div class="stat-card">
+    <div class="num {{ 'text-warning' if stats.unread > 0 }}">
+      {{ stats.unread }}
+    </div>
+    <div class="label">📬 Pesan Belum Dibaca</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="top-bar">
+    <h2>📬 Pesan Terbaru</h2>
+    <a href="{{ url_for('admin.messages') }}" class="btn btn-ghost btn-sm">Lihat Semua</a>
+  </div>
+
+  {% if recent_messages %}
+    <table>
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Email</th>
+          <th>Pesan</th>
+          <th>Waktu</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for msg in recent_messages %}
+        <tr>
+          <td>{{ msg.sender_name }}</td>
+          <td>{{ msg.sender_email }}</td>
+          <td class="td-message">{{ msg.message }}</td>
+          <td class="td-time">{{ msg.created_at.strftime('%d %b %Y, %H:%M') }}</td>
+          <td>
+            {% if msg.is_read %}
+              <span class="badge badge-gray">Dibaca</span>
+            {% else %}
+              <span class="badge badge-yellow">Baru</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="empty-state">Belum ada pesan masuk.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

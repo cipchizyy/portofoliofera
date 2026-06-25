@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dianfera's Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#about">About Me</a>
+    <a href="#skills">Skills</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+    <a href="{{ url_for('auth.login') }}">Login</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-clouds">
+      <svg class="cloud-svg cloud-a" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40,70 Q20,70 20,50 Q20,30 40,32 Q42,12 65,15 Q88,8 100,28 Q125,22 130,45 Q150,45 150,62 Q150,75 130,75 Z"/>
+      </svg>
+      <svg class="cloud-svg cloud-b" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40,70 Q20,70 20,50 Q20,30 40,32 Q42,12 65,15 Q88,8 100,28 Q125,22 130,45 Q150,45 150,62 Q150,75 130,75 Z"/>
+      </svg>
+      <svg class="cloud-svg cloud-c" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40,70 Q20,70 20,50 Q20,30 40,32 Q42,12 65,15 Q88,8 100,28 Q125,22 130,45 Q150,45 150,62 Q150,75 130,75 Z"/>
+      </svg>
+      <svg class="cloud-svg cloud-d" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40,70 Q20,70 20,50 Q20,30 40,32 Q42,12 65,15 Q88,8 100,28 Q125,22 130,45 Q150,45 150,62 Q150,75 130,75 Z"/>
+      </svg>
+    </div>
+
+    <div class="hero-mini-card">
+      <div class="badge">Pinned</div>
+      <div class="name">{{ hero.mini_title if hero else 'My Current Favorite' }}</div>
+      <div style="color:var(--gray);font-size:11px;">{{ hero.mini_sub if hero else '' }}</div>
+
+      <!-- ✅ FIX: item1 pakai mini_item1_label & mini_item1_value -->
+      <div class="mini-row">
+        <span>{{ hero.mini_item1_label if hero else 'Yosafat Irdi' }}</span>
+        <span style="color:var(--dark);font-weight:600;">{{ hero.mini_item1_value if hero else 'My bf <3' }}</span>
+      </div>
+
+      <!-- ✅ FIX: baris ini sebelumnya duplikat item1, sekarang pakai mini_item2 -->
+      <div class="mini-row">
+        <span>{{ hero.mini_item2_label if hero else 'Kopi Banjar Secerca' }}</span>
+        <span style="color:var(--dark);font-weight:600;">{{ hero.mini_item2_value if hero else '5/5' }}</span>
+      </div>
+
+      <!-- Baris ketiga: bisa pakai field tambahan atau fallback static -->
+      <div class="mini-row">
+        <span>{{ hero.mini_item3_label if hero else 'Sunset Sky' }}</span>
+        <span style="color:var(--dark);font-weight:600;">{{ hero.mini_item3_value if hero else "God's Creation" }}</span>
+      </div>
+    </div>
+
+    <div class="hero-photo-card">
+      {% if hero and hero.photo_url %}
+        <img src="{{ hero.photo_url }}" alt="Dianfera Ananta"/>
+      {% else %}
+        <img src="{{ url_for('static', filename='img/foto-fera.jpg') }}" alt="Dianfera Ananta"/>
+      {% endif %}
+      <div class="dot"></div>
+    </div>
+
+    <div class="hero-inner">
+      <div class="badge-pill">✦ {{ hero.badge_text if hero else 'Information Systems Student @ SWCU' }} ✦</div>
+      <h1 class="hero-heading">
+        {% if hero and hero.heading %}
+          {% for line in hero.heading.split('\n') %}{{ line }}<br/>{% endfor %}
+        {% else %}
+          get to<br/>know<br/>me
+        {% endif %}
+      </h1>
+      <a href="#about" class="hero-cta">
+        Get Started
+        <span class="toggle"></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <h2 class="section-title">About <span>Me</span></h2>
+    <div class="about-grid">
+
+      <div class="reveal">
+        <div class="playlist-card">
+          <div class="label">Current Playlist</div>
+          <div class="playlist-item">
+            <div class="pl-icon coffee">☕</div>
+            <div class="pl-info">
+              <div class="pl-name">{{ about.playlist_item1_name if about else 'Memabsuh' }}</div>
+              <div class="pl-sub">{{ about.playlist_item1_sub if about else 'Hindia' }}</div>
+            </div>
+          </div>
+          <div class="playlist-item">
+            <div class="pl-icon lo">🎧</div>
+            <div class="pl-info">
+              <div class="pl-name">{{ about.playlist_item2_name if about else 'Wonderwall' }}</div>
+              <div class="pl-sub">{{ about.playlist_item2_sub if about else 'Oasis' }}</div>
+            </div>
+          </div>
+          {% if about and about.spotify_url %}
+            <a class="playlist-btn" href="{{ about.spotify_url }}" target="_blank">Share My Playlist ↗</a>
+          {% else %}
+            <a class="playlist-btn" href="#">Share My Playlist ↗</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="reveal" style="transition-delay:.15s">
+        <div class="about-text-card">
+          <h3>{{ about.heading if about else 'The Human Who Loves Database' }}</h3>
+          <p>{{ about.description if about else "As an Information Systems student, I'm fascinated by the world behind every application." }}</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <h2 class="section-title">Ski<span>lls</span></h2>
+
+    <!-- ✅ FIX: .skills-deco ditutup dengan benar, tidak ada </div> orphan -->
+    <div class="skills-deco">
+      <div class="deco-blob blob-1"></div>
+      <div class="deco-blob blob-2"></div>
+      <span class="deco-star star-1">✦</span>
+      <span class="deco-star star-2">✦</span>
+      <span class="deco-star star-3">✦</span>
+      <span class="deco-star star-4">✦</span>
+      <span class="deco-star star-5">✦</span>
+      <span class="deco-star star-6">✦</span>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skills-card reveal">
+        <h4><span class="icon">💻</span> Hard Skills</h4>
+        <div class="tag-wrap">
+          {% for s in hard_skills %}
+            <span class="tag">{{ s.name }}</span>
+          {% else %}
+            <span class="tag">Frontend</span>
+            <span class="tag">Backend</span>
+            <span class="tag">Data Analysis</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="skills-card reveal" style="transition-delay:.1s">
+        <h4>🎯 Skill Mastery</h4>
+        {% for s in mastery_skills %}
+        <div class="mastery-item">
+          <div class="mastery-label"><span>{{ s.name }}</span><span>{{ s.level }}%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="{{ s.level }}"></div></div>
+        </div>
+        {% else %}
+        <p style="color:var(--gray);font-size:13px;">Belum ada data mastery.</p>
+        {% endfor %}
+      </div>
+
+      <div class="skills-card reveal" style="transition-delay:.2s">
+        <h4>✨ Soft Skills</h4>
+        <div class="tag-wrap">
+          {% for s in soft_skills %}
+            <span class="tag">{{ s.name }}</span>
+          {% else %}
+            <span class="tag">Team Work</span>
+            <span class="tag">Leadership</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tools-card reveal" style="transition-delay:.3s">
+        <h4>🔧 Tools & Tech</h4>
+        <div class="tools-row">
+          {% for t in tools %}
+          <div class="tool-item">
+            <div class="tool-icon">{{ t.icon or '🔧' }}</div>
+            <span>{{ t.name }}</span>
+          </div>
+          {% else %}
+          <p style="color:var(--gray);font-size:13px;">Belum ada data tools.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <h2 class="section-title">Experi<span>ences</span></h2>
+    <div class="exp-list">
+      {% for exp in experiences %}
+      <div class="exp-item reveal" style="transition-delay:{{ loop.index0 * 0.1 }}s">
+        <div class="exp-head">
+          <span class="exp-year">{{ exp.year }}</span>
+          <span class="exp-sep">|</span>
+          <h3 class="exp-role">{{ exp.role }}</h3>
+        </div>
+        <span class="exp-company">{{ exp.company }}</span>
+        <p class="exp-desc">{{ exp.description }}</p>
+      </div>
+      {% else %}
+      <p style="color:var(--gray);text-align:center;">Belum ada experience.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="proj-deco">
+      <div class="deco-grid-lines"></div>
+      <div class="deco-square sq-1"></div>
+      <div class="deco-square sq-2"></div>
+      <div class="deco-square sq-3"></div>
+      <div class="deco-blob-proj blob-p1"></div>
+      <div class="deco-blob-proj blob-p2"></div>
+      <span class="deco-star-proj star-p1">✦</span>
+      <span class="deco-star-proj star-p2">✦</span>
+      <span class="deco-star-proj star-p3">✦</span>
+    </div>
+    <h2 class="section-title">Proj<span>ects</span></h2>
+    <div class="projects-grid">
+      {% for proj in projects %}
+      <div class="project-card reveal" style="transition-delay:{{ loop.index0 * 0.1 }}s">
+        <div class="project-img">
+          <img src="{{ proj.image_url or 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=600&h=400&fit=crop' }}" alt="{{ proj.title }}"/>
+        </div>
+        <div class="project-body">
+          <h3 class="project-title">{{ proj.title }}</h3>
+          <p class="project-desc">{{ proj.description }}</p>
+          <div class="project-tags">
+            {% if proj.tags %}
+              {% for tag in proj.tags.split(',') %}
+                <span class="tag">{{ tag.strip() }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <p style="color:var(--gray);text-align:center;grid-column:1/-1;">Belum ada project.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <h2 class="contact-title">Let's Start a<br/><span>Conversation</span></h2>
+    <div class="contact-grid">
+
+      <div class="contact-form-card reveal">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Name</label>
+            <input type="text" id="contact-name" placeholder="Your name"/>
+          </div>
+          <div class="form-field">
+            <label>Email</label>
+            <input type="email" id="contact-email" placeholder="your@email.com"/>
+          </div>
+        </div>
+        <div class="form-field" style="margin-bottom:14px;">
+          <label>Message</label>
+          <textarea id="contact-message" placeholder="Tell me about your project..."></textarea>
+        </div>
+        <button class="send-btn" onclick="sendMessage()">
+          Send Message <span class="btn-dot"></span>
+        </button>
+        <div id="contact-feedback" style="margin-top:10px;font-size:13px;font-weight:500;"></div>
+      </div>
+
+      <div class="connect-card reveal" style="transition-delay:.1s">
+        <div class="connect-box">
+          <div class="connect-label">Connect</div>
+          <div class="connect-links">
+            <a class="connect-link" href="https://www.instagram.com/dianfeera/" target="_blank">Instagram</a>
+            <a class="connect-link" href="https://www.linkedin.com/in/dianfera-ananta-04a72b322/" target="_blank">LinkedIn</a>
+          </div>
+        </div>
+        <div class="reply-card">
+          <div class="reply-dot"></div>
+          <span>Usually replies in 24 hours.</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2024 Dianfera Ananta · Information Systems Student</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
