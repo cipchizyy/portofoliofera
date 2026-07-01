@@ -1,2 +1,0 @@
--- Active: 1782316224521@@gateway01.ap-southeast-1.prod.aws.tidbcloud.com@4000@portfolio_db
--- SQL schema
