@@ -1,0 +1,53 @@
+{% extends 'admin/base.html' %}
+{% block title %}{{ 'Edit' if proj else 'Tambah' }} Project{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>{{ '✏️ Edit' if proj else '+ Tambah' }} Project</h1>
+</div>
+
+<div class="card">
+  <form method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Judul Project</label>
+      <input type="text" name="title" placeholder="mis. Sistem Informasi Perpustakaan" value="{{ proj.title if proj else '' }}" required/>
+    </div>
+    <div class="form-group">
+      <label>Deskripsi</label>
+      <textarea name="description" placeholder="Deskripsi singkat project, peran kamu, dan teknologi yang dipakai.">{{ proj.description if proj else '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Gambar Project</label>
+      {% if proj and proj.image_url %}
+        <div style="margin-bottom:10px;">
+          <img src="{{ proj.image_url }}" style="width:200px;height:130px;object-fit:cover;border-radius:10px;border:2px solid #e5e7eb;"/>
+          <p style="font-size:11px;color:var(--gray);margin-top:6px;">Upload baru untuk mengganti.</p>
+        </div>
+      {% endif %}
+      <input type="file" name="image" accept="image/*"/>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Tags (pisah dengan koma)</label>
+        <input type="text" name="tags" placeholder="mis. Figma, UI/UX, React" value="{{ proj.tags if proj else '' }}"/>
+      </div>
+      <div class="form-group">
+        <label>Link Project (opsional)</label>
+        <input type="url" name="link" placeholder="https://..." value="{{ proj.link if proj else '' }}"/>
+      </div>
+      <div class="form-group">
+        <label>Urutan Tampil</label>
+        <input type="number" name="order" value="{{ proj.order if proj else 0 }}"/>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">💾 Simpan</button>
+      <a href="{{ url_for('admin.projects') }}" class="btn btn-ghost">Batal</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

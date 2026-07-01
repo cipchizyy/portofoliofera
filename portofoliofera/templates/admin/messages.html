@@ -1,0 +1,82 @@
+{% extends 'admin/base.html' %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>📬 Pesan Masuk</h1>
+  <p>Semua pesan dari form contact portfolio.</p>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr><th>Nama</th><th>Email</th><th>Pesan</th><th>Waktu</th><th>Status</th><th>Aksi</th></tr>
+    </thead>
+    <tbody>
+      {% for msg in messages %}
+      <tr id="row-{{ msg.id }}" style="{% if not msg.is_read %}background:#fffbeb;{% endif %}">
+        <td><strong>{{ msg.name }}</strong></td>
+        <td><a href="mailto:{{ msg.email }}" style="color:inherit;">{{ msg.email }}</a></td>
+        <td style="max-width:280px;">
+          {% set full_message = msg.message or '' %}
+          <details>
+            <summary style="cursor:pointer;font-size:13px;color:var(--gray);">
+              {{ full_message[:60] }}{% if full_message|length > 60 %}...{% endif %}
+            </summary>
+            <p style="margin-top:8px;font-size:13px;line-height:1.6;color:#333;">{{ full_message }}</p>
+          </details>
+        </td>
+        <td style="font-size:12px;color:var(--gray);white-space:nowrap;">
+          {% if msg.created_at %}
+            {{ msg.created_at.strftime('%d %b %Y') }}<br/>{{ msg.created_at.strftime('%H:%M') }}
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td id="status-{{ msg.id }}">
+          {% if msg.is_read %}
+            <span class="badge badge-gray">Dibaca</span>
+          {% else %}
+            <span class="badge badge-yellow">Baru</span>
+          {% endif %}
+        </td>
+        <td style="display:flex;gap:6px;flex-wrap:wrap;">
+          {% if not msg.is_read %}
+          <button class="btn btn-ghost btn-sm" type="button" onclick="markRead({{ msg.id }}, this)">✓ Tandai Dibaca</button>
+          {% endif %}
+          <form method="POST" action="{{ url_for('admin.message_delete', id=msg.id) }}" onsubmit="return confirm('Hapus pesan ini?')" style="display:inline;">
+            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" style="text-align:center;color:var(--gray);padding:30px 0;">Belum ada pesan masuk.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+async function markRead(id, btn) {
+  btn.disabled = true;
+  try {
+    const res = await fetch(`/admin/messages/read/${id}`, { method: 'POST' });
+    if (!res.ok) {
+      alert('Gagal menandai pesan sebagai dibaca. Coba lagi.');
+      btn.disabled = false;
+      return;
+    }
+    const row = document.getElementById(`row-${id}`);
+    const status = document.getElementById(`status-${id}`);
+    if (row) row.style.background = '';
+    if (status) status.innerHTML = '<span class="badge badge-gray">Dibaca</span>';
+    btn.remove();
+  } catch (err) {
+    console.error('markRead error:', err);
+    alert('Terjadi kesalahan koneksi.');
+    btn.disabled = false;
+  }
+}
+</script>
+
+{% endblock %}

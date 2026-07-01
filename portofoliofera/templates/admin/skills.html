@@ -1,0 +1,79 @@
+{% extends 'admin/base.html' %}
+{% block title %}Skills{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>💡 Skills</h1>
+  <p>Kelola hard skills, soft skills, mastery bars, dan tools.</p>
+</div>
+
+<!-- Form tambah -->
+<div class="card" style="margin-bottom:24px;">
+  <h3 style="font-size:14px;font-weight:700;margin-bottom:16px;">+ Tambah Skill Baru</h3>
+  <form method="POST" action="{{ url_for('admin.skill_add') }}">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Kategori</label>
+        <select name="category">
+          <option value="hard">Hard Skill</option>
+          <option value="mastery">Mastery Bar</option>
+          <option value="soft">Soft Skill</option>
+          <option value="tool">Tool & Tech</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Nama</label>
+        <input type="text" name="name" placeholder="mis. Frontend Development" required/>
+      </div>
+      <div class="form-group">
+        <label>Level % (khusus Mastery)</label>
+        <input type="number" name="level" min="0" max="100" placeholder="mis. 90"/>
+      </div>
+      <div class="form-group">
+        <label>Icon Emoji (khusus Tool)</label>
+        <input type="text" name="icon" placeholder="mis. ⚡"/>
+      </div>
+      <div class="form-group">
+        <label>Urutan</label>
+        <input type="number" name="order" value="0"/>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-yellow">+ Tambah</button>
+  </form>
+</div>
+
+<!-- Tabel -->
+<div class="card">
+  <table>
+    <thead>
+      <tr><th>Nama</th><th>Kategori</th><th>Level</th><th>Icon</th><th>Urutan</th><th>Aksi</th></tr>
+    </thead>
+    <tbody>
+      {% for s in skills %}
+      <tr>
+        <td><strong>{{ s.name }}</strong></td>
+        <td>
+          {% if s.category == 'hard' %}<span class="badge badge-yellow">Hard</span>
+          {% elif s.category == 'mastery' %}<span class="badge badge-green">Mastery</span>
+          {% elif s.category == 'soft' %}<span class="badge badge-gray">Soft</span>
+          {% else %}<span class="badge" style="background:#ede9fe;color:#6d28d9;">Tool</span>
+          {% endif %}
+        </td>
+        <td>{{ s.level ~ '%' if s.level else '—' }}</td>
+        <td>{{ s.icon or '—' }}</td>
+        <td>{{ s.order }}</td>
+        <td style="display:flex;gap:6px;">
+          <a href="{{ url_for('admin.skill_edit', id=s.id) }}" class="btn btn-ghost btn-sm">Edit</a>
+          <form method="POST" action="{{ url_for('admin.skill_delete', id=s.id) }}" onsubmit="return confirm('Hapus skill ini?')">
+            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" style="text-align:center;color:var(--gray);padding:30px 0;">Belum ada skill.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

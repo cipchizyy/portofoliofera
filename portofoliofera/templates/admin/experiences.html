@@ -1,0 +1,41 @@
+{% extends 'admin/base.html' %}
+{% block title %}Experiences{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>📋 Experiences</h1>
+  <p>Kelola daftar pengalaman organisasi dan kerja.</p>
+</div>
+
+<div class="top-bar">
+  <span></span>
+  <a href="{{ url_for('admin.experience_add') }}" class="btn btn-primary">+ Tambah Experience</a>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr><th>Tahun</th><th>Jabatan</th><th>Organisasi</th><th>Urutan</th><th>Aksi</th></tr>
+    </thead>
+    <tbody>
+      {% for exp in experiences %}
+      <tr>
+        <td><span class="badge badge-yellow">{{ exp.year }}</span></td>
+        <td><strong>{{ exp.role }}</strong></td>
+        <td style="color:var(--gray);">{{ exp.company or '—' }}</td>
+        <td>{{ exp.order }}</td>
+        <td style="display:flex;gap:6px;">
+          <a href="{{ url_for('admin.experience_edit', id=exp.id) }}" class="btn btn-ghost btn-sm">Edit</a>
+          <form method="POST" action="{{ url_for('admin.experience_delete', id=exp.id) }}" onsubmit="return confirm('Hapus experience ini?')">
+            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" style="text-align:center;color:var(--gray);padding:30px 0;">Belum ada experience.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
